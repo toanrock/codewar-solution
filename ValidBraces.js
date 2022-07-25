@@ -17,37 +17,54 @@ Examples
 */
 
 
-function validBraces(braces){
-    //TODO 
-    let stack =[]
-    
-    for(let i=0;i<braces.length;i++){
-        if(braces[i] ==='[' || braces[i] ==='(' || braces[i]==='{' ){
-          stack.push(braces[i])
-        }
-        else{
-           switch(braces[i]){
-               case ']' :
-                  if(stack.pop()!== '['){
-                    return false
-                  }
-               break;
-               case '}':
-                   if(stack.pop()!== '{'){
-                    return false
-                  }
-               break;
-               case ')':
-                   if(stack.pop()!== '('){
-                    return false
-                  }
-               break;
-           }
-        }
-    }
-  
-    if(stack.length>0){
-      return false
-    }
-    return true
+validBraces = braces => {
+  const stack = [];
+
+  const square = {
+      start: '[',
+      end: ']'
+  };
+
+  const parentheses = {
+      start: '(',
+      end: ')'
+  };
+
+  const curly = {
+      start: '{',
+      end: '}'
+  };
+
+  const allBraces = [square, parentheses, curly];
+  const bracesMap = new Map();
+  const startingChars = [];
+
+  allBraces.forEach(brace => {
+      startingChars.push(brace.start);
+      bracesMap.set(brace.end,
+          {
+              ...brace,
+              matches: (endingChar) => endingChar === brace.start
+          }
+      );
+  });
+
+  let matching = true;
+
+  for (let i = 0; i < braces.length && matching; i++) {
+      const currBrace = braces[i];
+
+      if (startingChars.indexOf(currBrace) > -1) {
+          stack.push(currBrace)
+      } else {
+          if (!bracesMap.get(currBrace).matches(stack.pop())) {
+              matching = false;
+          }
+      }
   }
+
+
+  return matching && !stack.length;
+}
+
+
