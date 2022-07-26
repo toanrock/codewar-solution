@@ -15,32 +15,17 @@ If a string contains all repeating characters, it should return an empty string 
 
 
 function firstNonRepeatingLetter(s) {
-    // Add your code here
-    let mp = new Map();
-    for(let i=0;i<s.length;i++){
-        let lowerLetter = s[i].toLowerCase();
-        let upperLetter = s[i].toUpperCase();
-        let count = 0
-         count = mp.get(lowerLetter)
-           if(count === undefined){
-             count = mp.get(upperLetter)
-              if(count === undefined){
-                 mp.set(s[i],1)
-               } else{
-                 count++;
-                mp.set(upperLetter,count)
-             }
-           }
-          else{
-            count++;
-            mp.set(lowerLetter,count)
-          }                 
-    }
-     for( [key,value] of mp){
-        if(value === 1){
-          return key
-        }
-     }
-    return ""
-     
+  // Add your code here
+  if(s.length===1){
+    return s
   }
+  let lowerS = s.toLowerCase();
+  for(let i=0;i<lowerS.length;i++){
+    
+      if(lowerS.indexOf(lowerS[i])=== lowerS.lastIndexOf(lowerS[i]) ){
+        return s[i]
+      }
+  }
+  return ""
+   
+}
