@@ -44,22 +44,18 @@ https://en.wikipedia.org/wiki/Prime_gap
 */
 
 function gap(g, m, n) {
-    // your code
-  let first=0;
-  for(let i=m;i<=n;i++){
-      if(isPrime(i)){
-          if(first!==0){
-              if(i-first ===g){
-                return [first,i]
-              }else{
-                first = i
-              }
-          } else{
-            first = i
-          }
-      }
-  }
-  return null   
+  // your code
+    let first=0;
+    for(let end=m;end<=n;end++){
+        if(isPrime(end)){
+          if(end-first ===g){
+                return [first,end]
+            }else{
+                first = end
+            }   
+        }
+    }
+    return null   
 }
 
 function isPrime(num) {
@@ -71,7 +67,6 @@ function isPrime(num) {
      return true
    }
    let sqr = Math.sqrt(num)
-  
    for(let i = 2; i<= sqr;i++ ){
      if(num % i ==0 ){
        return false
