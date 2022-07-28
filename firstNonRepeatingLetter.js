@@ -14,18 +14,17 @@ If a string contains all repeating characters, it should return an empty string 
 
 
 
-function firstNonRepeatingLetter(s) {
+const firstNonRepeatingLetter = (s) => {
   // Add your code here
-  if(s.length===1){
+  if (s.length === 1) {
     return s
   }
   let lowerS = s.toLowerCase();
-  for(let i=0;i<lowerS.length;i++){
-    
-      if(lowerS.indexOf(lowerS[i])=== lowerS.lastIndexOf(lowerS[i]) ){
-        return s[i]
-      }
+  for (let i = 0; i < lowerS.length; i++) {
+    if (lowerS.indexOf(lowerS[i]) === lowerS.lastIndexOf(lowerS[i])) {
+      return s[i]
+    }
   }
   return ""
-   
+
 }
