@@ -43,12 +43,12 @@ Ref
 https://en.wikipedia.org/wiki/Prime_gap
 */
 
-const gap = (g, startNumber, endNumber) => {
+const gap = (gapBetweenPrime, startNumber, endNumber) => {
   // your code
   let firstPrime = 0;
-  for (let lastPrime = startNumber; last <= endNumber; last++) {
-    if (isPrime(last)) {
-      if (lastPrime - firstPrime === g) {
+  for (let lastPrime = startNumber; lastPrime <= endNumber; lastPrime++) {
+    if (isPrime(lastPrime)) {
+      if (lastPrime - firstPrime === gapBetweenPrime) {
         return [firstPrime, lastPrime]
       } else {
         firstPrime = lastPrime
