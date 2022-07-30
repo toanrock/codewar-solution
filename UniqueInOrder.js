@@ -7,17 +7,16 @@ uniqueInOrder('AAAABBBCCDAABBB') == ['A', 'B', 'C', 'D', 'A', 'B']
 uniqueInOrder('ABBCcAD')         == ['A', 'B', 'C', 'c', 'A', 'D']
 uniqueInOrder([1,2,2,3,3])       == [1,2,3]
 */
+
 var uniqueInOrder = (iterable) => {
   //your code here - remember iterable can be a string or an array
-  if (iterable.length === 0) {
-    return []
-  }
-  let finalArr = []
-  finalArr.push(iterable[0])
-  for (let i = 1; i < iterable.length; i++) {
-    if (iterable[i] !== finalArr[finalArr.length - 1]) {
-      finalArr.push(iterable[i])
+  let arrString = Array.isArray(iterable) ? iterable : iterable.split('');
+
+  return arrString.reduce((preValue, curValue) => {
+    if (preValue[preValue.length - 1] !== curValue) {
+      preValue.push(curValue)
     }
-  }
-  return finalArr
+    return preValue
+  }, [])
+
 }

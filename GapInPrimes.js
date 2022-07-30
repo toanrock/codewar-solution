@@ -43,39 +43,34 @@ Ref
 https://en.wikipedia.org/wiki/Prime_gap
 */
 
-function gap(g, m, n) {
-    // your code
-  let first=0;
-  for(let i=m;i<=n;i++){
-      if(isPrime(i)){
-          if(first!==0){
-              if(i-first ===g){
-                return [first,i]
-              }else{
-                first = i
-              }
-          } else{
-            first = i
-          }
+const gap = (gapBetweenPrime, startNumber, endNumber) => {
+  // your code
+  let firstPrime = 0;
+  for (let lastPrime = startNumber; lastPrime <= endNumber; lastPrime++) {
+    if (isPrime(lastPrime)) {
+      if (lastPrime - firstPrime === gapBetweenPrime) {
+        return [firstPrime, lastPrime]
+      } else {
+        firstPrime = lastPrime
       }
+    }
   }
-  return null   
+  return null
 }
 
-function isPrime(num) {
+const isPrime = (num) => {
   //TODO
-  if(num <=1){
+  if (num <= 1) {
     return false;
   }
-   if(num > 1 && num <=3){
-     return true
-   }
-   let sqr = Math.sqrt(num)
-  
-   for(let i = 2; i<= sqr;i++ ){
-     if(num % i ==0 ){
-       return false
-     }
-   }
+  if (num > 1 && num <= 3) {
+    return true
+  }
+  let sqr = Math.sqrt(num)
+  for (let i = 2; i <= sqr; i++) {
+    if (num % i == 0) {
+      return false
+    }
+  }
   return true
 }
