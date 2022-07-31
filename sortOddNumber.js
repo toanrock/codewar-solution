@@ -7,29 +7,21 @@ Examples
 [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]  =>  [1, 8, 3, 6, 5, 4, 7, 2, 9, 0]
 */
 
-function sortArray(array) {
-    // Return a sorted array.
-      let stack = []
-      for(let i=0; i< array.length;i++){
-        let currentPosition = i
-        if(array[i] %2 !== 0){
-          console.log(i)
-          for(let j = stack.length-1;j>=0;j--){
-                let prePosition = stack[j]
-                if(array[currentPosition] < array[prePosition]){
-                   let temp = array[currentPosition]
-                   array[currentPosition] = array[prePosition]
-                   array[prePosition] = temp
-                   currentPosition = prePosition
-                }
-                else{
-                   break
-                }
-          }
-          stack.push(i) // add the postion of odd number to the stack  
+var sortArray = (array) => {
+  // Return a sorted array.
+  let sortedArray = array.reduce((previousValue, currentValue) => {
+    previousValue.push(currentValue)
+    if (currentValue % 2 !== 0) {
+      let currentIndex = previousValue.length - 1
+      for (let i = previousValue.length - 2; i >= 0; i--) {
+        if (previousValue[i] > currentValue && previousValue[i] % 2 !== 0) {
+          previousValue[currentIndex] = previousValue[i]
+          previousValue[i] = currentValue
+          currentIndex = i
         }
       }
-     return array;
-  }
-  
-  
+    }
+    return previousValue
+  }, [])
+  return sortedArray;
+}
