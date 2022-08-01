@@ -15,67 +15,65 @@ RomanNumerals.toRoman(1000); // should return 'M'
 RomanNumerals.fromRoman('M'); // should return 1000
 
 
-*/ 
+*/
 
 
 
 // TODO: create a RomanNumerals helper object
 
 
-var RomanNumerals = (function(){ 
-    var symbol={
-         "I":1,
-         "IV":4,
-         "V":5,
-         "X":10,
-         "L":50,
-         "C":100,
-         "D":500,
-         "M":1000
-       }
- 
-   return {
-         toRoman: function(number){
-           console.log("input number "+number)
-             let result =""
-             let substract = ["I","IV","V","X","L","C","D","M"]
-             let index = substract.length-1
-             let checkfour =0;
-             while(number>0){
-               let newNumber = number - symbol[substract[index]]
-               
-               if(newNumber <0){
-                 index--
-                 checkfour=0
-               }else{
-                 result += substract[index]
-                 number = newNumber
-                 checkfour++
-                 if(checkfour ===4){
-                   result = result.substring(0,result.length-5)
-                   result += substract[index] +substract[index+2]
-                 }
-               }
-             }
-             console.log("final result "+result)
-             return result
-           },
- 
-       fromRoman:function(roman){
-           let result =0;
-           let preValue = symbol[roman[0]]
-           
-           result+= preValue
-         for(let i=1;i<roman.length;i++){
-             let value = symbol[roman[i]]
-             if(preValue < value){
-                 result+= (value - (preValue*2))
-             }else{
-               result+= value;
-             }
-             preValue = value
-         }
-           return result
-       }
-   }
- })();
+var RomanNumerals = (function () {
+  var symbol = {
+    "I": 1,
+    "IV": 4,
+    "V": 5,
+    "IX": 9,
+    "X": 10,
+    "XL": 40,
+    "L": 50,
+    "XC": 90,
+    "C": 100,
+    "CD": 400,
+    "D": 500,
+    "CM": 900,
+    "M": 1000
+  }
+
+  return {
+    toRoman: function (number) {
+      console.log("input number " + number)
+      let result = ""
+      let substract = ["I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M"]
+      let index = substract.length - 1
+      while (number > 0) {
+        let newNumber = number - symbol[substract[index]]
+        if (newNumber < 0) {
+          index--
+        } else {
+          result += substract[index]
+          number = newNumber
+
+        }
+      }
+      console.log("final result " + result)
+      return result
+    },
+
+    fromRoman: function (roman) {
+      let result = 0;
+      let preValue = symbol[roman[0]]
+
+      result += preValue
+      for (let i = 1; i < roman.length; i++) {
+        let value = symbol[roman[i]]
+        if (preValue < value) {
+          result += (value - (preValue * 2))
+        } else {
+          result += value;
+        }
+        preValue = value
+      }
+      return result
+    }
+  }
+})();
