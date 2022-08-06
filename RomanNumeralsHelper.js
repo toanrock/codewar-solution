@@ -18,10 +18,6 @@ RomanNumerals.fromRoman('M'); // should return 1000
 */
 
 
-
-// TODO: create a RomanNumerals helper object
-
-
 var RomanNumerals = (function () {
   var symbol = {
     "I": 1,
