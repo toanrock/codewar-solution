@@ -1,268 +1,144 @@
-var charMap = {};
-var arrMap = [];
-var escapsePoint =
-{
-    x:"",
-    y:""
-}
-var stackPostion =[]
-var aCurrentPosition = {x:"",y:""};
-B= ["X.....>","..v..X.",".>..X..","A......"]
-B1 =["...Xv","AX..^",".XX.."]
-B2 =["....","....",">..A"]
-B3 =["...v","A...","...."]
-//solution(B)
-function solution(B) {
-    // write your code in JavaScript (Node.js 8.9.4)
-    charMap ={};
-    arrMap =[];
-    escapsePoint =
-    {
-        x:"",
-        y:""
-    }
-    stackPostion = []
-    aCurrentPosition = {x:"",y:""};
 
-     arrMap = convertTo2NArray(B)
- 
-    if(guardVision() === false){
-        console.log("guard see the Assasin");
-        return false;
+B = ["X.....>", "..v..X.", ".>..X..", "A......"]
+B1 = ["...Xv", "AX..^", ".XX.."]
+B2 = ["....", "....", ">..A"]
+B3 = ["...v", "A...", "...."]
+B4 = ["...<....", ".X...X..", "...XXX.^", "XA.v....", "......X.", ".>....X."]
+
+class ElementPoint {
+    constructor(type, postitionX, positionY) {
+        this.type = type;
+        this.x = postitionX;
+        this.y = positionY;
     }
-    if(checkEscapePoint() === false){
-        console.log("guard see escape point");
-        return false;
-    }
-   return runEscape();
 }
-function runEscape(){
-    var assasin = charMap["A"]
-   
-    aCurrentPosition.x = Number(assasin[0][0])
-    aCurrentPosition.y = Number(assasin[0][1])
-    findPath()
-    while(stackPostion.length>0){
-       if( findPath() === false){
-         let prevPosition = stackPostion.pop()
-         aCurrentPosition.x =prevPosition.x
-         aCurrentPosition.y = prevPosition.y
-       }
-        if(aCurrentPosition.x ===escapsePoint.x && aCurrentPosition.y===escapsePoint.y){
+
+
+//solution(B)
+const solution = (B) => {
+    // write your code in JavaScript (Node.js 8.9.4)
+    let charMap = [];
+    let arrMap = [];
+
+
+
+    [arrMap, charMap] = convertTo2NArray(B, charMap)
+
+    let escapsePoint = new ElementPoint("escapse", arrMap.length - 1, arrMap[0].length - 1) // the right bottom will be the escapse point
+    let assasin = charMap.find((elm) => elm.type === "A")
+    arrMap = guardVision(charMap, arrMap);
+
+    console.log(arrMap)
+    if (arrMap[escapsePoint.x][escapsePoint.y] !== ".") { // check if there is any obstace at escape point
+        return false;
+    }
+    if (arrMap[assasin.x][assasin.y] !== "A") { // check if guard see the Assasin
+        return false;
+    }
+
+    return runEscape(arrMap, assasin, escapsePoint);
+}
+
+// the Run Escape function using the breadth-first search alorithm
+const runEscape = (arrMap, assasin, escapsePoint) => {
+
+    let qNode = []
+    qNode.push(assasin) // start from the Assasin position
+    while (qNode.length > 0) {
+        let node = qNode.shift()
+        if (node.x === escapsePoint.x && node.y === escapsePoint.y) { // if the current node( position) is the escapse point then we pass the esacape point
             return true;
         }
-    }
-    console.log("Stuck can't find the patch")
-    return false;
+        if (arrMap[node.x][node.y] === ".") {
+            arrMap[node.x][node.y] = "M" // we mark it when we already move
+        }
 
+        if (node.y + 1 <= escapsePoint.y && arrMap[node.x][node.y + 1] === ".") { //  check if Assasin can move to the right
+            qNode.push(new ElementPoint("step", node.x, node.y + 1))
+        }
+        if (node.x + 1 <= escapsePoint.x && arrMap[node.x + 1][node.y] === ".") { // check if Assasin can move down
+            qNode.push(new ElementPoint("step", node.x + 1, node.y))
+        }
+        if (node.y - 1 >= 0 && arrMap[node.x][node.y - 1] === ".") { // check if Assasin can move to the left
+            qNode.push(new ElementPoint("step", node.x, node.y - 1))
+        }
+        if (node.x - 1 >= 0 && arrMap[node.x - 1][node.y] === ".") { // check if Assasin can move up
+            qNode.push(new ElementPoint("step", node.x - 1, node.y))
+        }
+    }
+    return false;
 
 }
 
-function findPath(){
-    // check left postion
-    if(aCurrentPosition.y !==0 && arrMap[aCurrentPosition.x][aCurrentPosition.y-1] ==="."){ // move left
-        stackPostion.push(aCurrentPosition)
-        arrMap[aCurrentPosition.x][aCurrentPosition.y] = "X"
-        aCurrentPosition.y--; 
-        return true;
-    }
-    // check right postion
-    if(aCurrentPosition.y<escapsePoint.y && arrMap[aCurrentPosition.x][aCurrentPosition.y+1] ==="."){ // move right
-        stackPostion.push(aCurrentPosition)
-        arrMap[aCurrentPosition.x][aCurrentPosition.y] = "X"
-        aCurrentPosition.y++; 
-        return true;
-    }
-    // check up postion 
-    if(aCurrentPosition.x !==0 && arrMap[aCurrentPosition.x-1][aCurrentPosition.y] ==="."){
-        stackPostion.push(aCurrentPosition)
-        arrMap[aCurrentPosition.x][aCurrentPosition.y] = "X"
-        aCurrentPosition.x--;
-        return true;
-    }
-    // check down postion
-    if(aCurrentPosition.x<escapsePoint.x && arrMap[aCurrentPosition.x+1][aCurrentPosition.y] ==="."){ // move down
-        stackPostion.push(aCurrentPosition)
-        arrMap[aCurrentPosition.x][aCurrentPosition.y] = "X"
-        aCurrentPosition.x++;
-        return true;
-    }
-    // stuck can't move
-    return false;
-}
 
-function convertTo2NArray(myArr){
-    
+const convertTo2NArray = (myArr, charMap) => {
+
     var newArr = [];
-   // console.log(myArr.length)
-    for(let i=0;i<myArr.length;i++){
+
+    for (let i = 0; i < myArr.length; i++) {
         let smArr = [];
-        for(let j =0; j<myArr[i].length;j++){
-            if(myArr[i][j]!=="."){
-               
-                if(charMap[myArr[i][j]]==undefined)
-                {
-                    charMap[myArr[i][j]] = []
-                }               
-               charMap[myArr[i][j]].push(""+i+j)
+        for (let j = 0; j < myArr[i].length; j++) {
+            if (myArr[i][j] !== ".") {
+                let element = new ElementPoint(myArr[i][j], i, j)
+                charMap.push(element)
             }
-            
             smArr.push(myArr[i][j])
-            
+
         }
         newArr.push(smArr)
     }
-   
-    escapsePoint.x = newArr.length -1;
-    escapsePoint.y = newArr[0].length -1;
-    
-    return newArr
-}
 
-function checkEscapePoint( ){
-    if(arrMap[escapsePoint.x][escapsePoint.y] === "@" ){
-        return false;
-    }
-}
 
-function guardVision(){
-    let leftGuard = charMap["<"];
-    if(leftGuard!= null || leftGuard!= undefined){
-        console.log(leftGuard)
-        for(let i =0 ; i<leftGuard.length;i++)
-        {
-            let position = {x:"",y:""}
-            position.x = Number(leftGuard[i][0])
-            position.y = Number(leftGuard[i][1])
-            if(leftGuardVisionCheck(position.x,position.y) === false){
-                console.log(" left Guard see the Assasin")
-                return false;
-            }
-        }
-    }
-    let rightGuard = charMap[">"];
-    if(rightGuard!= null || rightGuard!= undefined){
-        console.log(rightGuard)
-        for(let i =0 ; i<rightGuard.length;i++)
-        {
-            let position = {x:"",y:""}
-            position.x = Number(rightGuard[i][0])
-            position.y = Number(rightGuard[i][1])
-           if( rightGuardVisionCheck(position.x,position.y) === false){
-            console.log(" right Guard see the Assasin")
-                return false;
-           }
-           
-        }
-    }
-    let upGuard = charMap["^"];
-    if(upGuard!= null || upGuard!= undefined){
-        
-        for(let i =0 ; i<upGuard.length;i++)
-        {
-            let position = {x:"",y:""}
-            position.x = Number(upGuard[i][0])
-            position.y = Number(upGuard[i][1])
-            if(upGuardVisionCheck(position.x,position.y) ===false){
-                console.log(" up Guard see the Assasin")
-                return false;
-            }
-        }
-    }
-     let downGuard = charMap["v"];
-    if(downGuard!= null || downGuard!= undefined){
-        
-        for(let i =0 ; i<downGuard.length;i++)
-        {
-            let position = {x:"",y:""}
-            position.x = Number(downGuard[i][0])
-            position.y = Number(downGuard[i][1])
-            if(downGuardVisionCheck(position.x,position.y)=== false){
-                console.log(" Down Guard see the Assasin")
-                return false;
-            }
-        }
-    }
 
-    return true
+    return [newArr, charMap]
 }
 
 
-function leftGuardVisionCheck(x,y){
-    
-    if(y==0){
-        return true;
+const guardVision = (charMap, arrMap) => {
+    for (let elm of charMap) {
+        switch (elm.type) {
+            case "<": // guard see the left side
+                for (let i = elm.y - 1; i >= 0; i--) {
+                    if (arrMap[elm.x][i] === "." || arrMap[elm.x][i] === "@" || arrMap[elm.x][i] === "A") {
+                        arrMap[elm.x][i] = "@"
+                    } else { // see the obstace or other guard we stop
+                        break;
+                    }
+                }
+                break;
+            case ">": // guard see the right side
+                for (let i = elm.y + 1; i < arrMap[0].length; i++) {
+                    if (arrMap[elm.x][i] === "." || arrMap[elm.x][i] === "@" || arrMap[elm.x][i] === "A") {
+                        arrMap[elm.x][i] = "@"
+                    } else { // see the obstace or other guard we stop
+                        break;
+                    }
+
+                }
+                break;
+            case "^": //guard see up side
+                for (let i = elm.x - 1; i >= 0; i--) {
+                    if (arrMap[i][elm.y] === "." || arrMap[i][elm.y] === "@" || arrMap[i][elm.y] === "A") {
+                        arrMap[i][elm.y] = "@"
+                    } else { // see the obstace or other guard we stop
+                        break;
+                    }
+                }
+                break;
+            case "v": // guard see the down side
+                for (let i = elm.x + 1; i < arrMap.length; i++) {
+                    if (arrMap[i][elm.y] === "." || arrMap[i][elm.y] === "@" || arrMap[i][elm.y] === "A") {
+                        arrMap[i][elm.y] = "@"
+                    } else { // see the obstace or other guard we stop
+                        break;
+                    }
+
+                }
+                break;
+        }
+
     }
-    for(let i = y-1;i>=0;i--){
-        if( arrMap[x][i] ==="."  || arrMap[x][i] ==="@"){
-            arrMap[x][i] = "@"
-        }
-        else if(arrMap[x][i] ==="A"){
-            console.log("left Guard see the Assasin")
-            return false;
-        }
-        else{
-            return true;
-        }
-    }
+    return arrMap;
 }
 
-function rightGuardVisionCheck(x,y){
-    console.log(x)
-    console.log(y)
-    if(y==escapsePoint.y){
-        return true;
-    }
-    for(let i = y+1;i<=escapsePoint.y;i++){
-        if( arrMap[x][i] ==="." || arrMap[x][i] ==="@"){
-            arrMap[x][i] = "@"
-        }
-        else if(arrMap[x][i] ==="A"){
-            console.log(" right Guard see the Assasin")
-            return false;
-        }
-        else{
-            return true;
-        }
-    }
-}
-
-function upGuardVisionCheck(x,y){
-
-    if(x==0){
-        return true;
-    }
-    for(let i = x-1;i>=0;i--){
-        if( arrMap[i][y] ==="." || arrMap[i][y] ==="@"){
-            arrMap[i][y] = "@"
-        }
-        else if(arrMap[i][y] ==="A"){
-            console.log("Up Guard see the Assasin")
-            return false;
-        }
-        else{
-           
-            return true;
-        }
-    }
-}
-function downGuardVisionCheck(x,y){
-    console.log(x+" -- " +y)
-    if(x==escapsePoint.x){
-        return true;
-    }
-    for(let i = x+1;i<=escapsePoint.x;i++){
-        if( arrMap[i][y] ==="." || arrMap[i][y] ==="@" ){
-            arrMap[i][y] = "@"
-        }
-        else if(arrMap[i][y] ==="A"){
-            console.log(" Down Guard see the Assasin")
-            return false;
-        }
-        else{
-          
-            return true;
-        }
-    }
-}
 
