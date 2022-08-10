@@ -25,6 +25,7 @@ const firstNonRepeatingLetter = (s) => {
       return s[i]
     }
   }
+
   return ""
 
 }
