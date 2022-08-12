@@ -16,7 +16,7 @@ const removeZeros = (array) => {
     let length = array.length
     for (let i = 0; i < length - 1; i++) {
         //  console.log(array[i])
-        if ((array[i] !== null && array[i] !== false) && (Number(array[i]) === 0)) {
+        if (array[i] === 0 || array[i] === "0") {
             let temp = array[i]
 
             for (let j = i; j < array.length - 1; j++) { // shift array
