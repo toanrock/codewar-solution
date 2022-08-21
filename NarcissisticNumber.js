@@ -16,23 +16,18 @@ Error checking for text strings or other invalid inputs is not required,
  only valid positive non-zero integers will be passed into the function.
 */
 
-function narcissistic(value) {
-    // Code me to return true or false
-    if( value < 0){
-      return false;
-    }
-    if(value < 10){
-      return true;
-    }
-    let sum = 0;
-    let strValue = ''+value
-    
-    for(let i=0;i<strValue.length;i++){
-      sum += Math.pow(strValue[i],strValue.length)
-    }
-    console.log(sum);
-    if(sum === value){
-      return true;
-    }
+const isNarcissistic = (value) => {
+  // Code me to return true or false
+  if (value < 0) {
     return false;
   }
+  const strValue = ('' + value).split('')
+
+  const sum = strValue.reduce((prevValue, currValue) => prevValue + Math.pow(currValue, strValue.length)
+    , 0)
+
+  if (sum === value) {
+    return true;
+  }
+  return false;
+}
