@@ -31,9 +31,9 @@ public class StringMerger {
       for(int i =0; i < s.length();i++){
         char c = s.charAt(i);
         if( pIndex1 < part1.length() && pIndex2 < part2.length() &&  c == part1.charAt(pIndex1) && c == part2.charAt(pIndex2) && bothmatch == false){
-          bothmatch = true;
-          pMatchIndex1 = pIndex1;
-          pMatchIndex2 = pIndex2;
+            bothmatch = true;
+            pMatchIndex1 = pIndex1;
+            pMatchIndex2 = pIndex2;
         }
        
          if( bothmatch ){
@@ -57,7 +57,6 @@ public class StringMerger {
         } 
         
       }
-        
         
         if((pIndex1+pIndex2) != s.length()){
           return false;
